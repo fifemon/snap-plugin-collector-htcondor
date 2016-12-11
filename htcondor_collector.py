@@ -63,9 +63,10 @@ class HTCondor(snap.Collector):
     def collect(self, metrics):
         config = metrics[0].config # TODO process config from all metrics?
         daemon_types_to_query = set([m.namespace[2].value for m in metrics])
+        htcondor_pool = str(config['pool'])
 
-        logger.info('collecting metrics from htcondor pool {}'.format(config['pool']))
-        ads = get_classads(pool=str(config['pool']), 
+        logger.info('collecting metrics from htcondor pool {}'.format(htcondor_pool))
+        ads = get_classads(pool=htcondor_pool, 
             daemon_types = daemon_types_to_query, 
             retry_delay = config['retry_delay'],
             max_retries = config['max_retries'])
@@ -90,12 +91,7 @@ class HTCondor(snap.Collector):
                             unit=metric.unit,
                             description=metric.description,
                             data = d[k])
-                    # TODO: why doesn't this work instead?
-                    #m = copy.deepcopy(metric)
-                    #m.namespace[3].value = d['Name']
-                    #m.namespace[4].value = k
-                    #m.data = d[k]
-                    #m.timestamp = timestamp
+                    m.tags.update({'pool':htcondor_pool})
                     rmetrics.append(m)
         return rmetrics
 
@@ -132,4 +128,4 @@ def get_classads(pool='localhost', daemon_types=htcondor_daemons.keys(), retry_d
 
 
 if __name__ == '__main__':
-    HTCondor("htcondor", 1).start_plugin()
+    HTCondor("htcondor", 2).start_plugin()

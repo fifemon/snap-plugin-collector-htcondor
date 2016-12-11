@@ -150,6 +150,10 @@ ID: 8193d88d-91a3-4268-bcca-cac6096b6de4
 
 ## Releases
 
+### Version 2
+
+Add `pool` tag to collected metrics.
+
 ### Version 1
 
 Initial alpha release. Collects basic stats (equivalent of `condor_status -l`). 
