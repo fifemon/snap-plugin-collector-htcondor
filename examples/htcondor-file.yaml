@@ -1,0 +1,17 @@
+---
+  version: 1
+  schedule:
+    type: "simple"
+    interval: "30s"
+  max-failures: 10
+  workflow:
+    collect:
+      metrics:
+        /fifemon/htcondor/collectors/*/RecentDaemonCoreDutyCycle/value: {}
+      config:
+        /fifemon/htcondor:
+          pool: "mycollector.example.com"
+      publish:
+        - plugin_name: "file"
+          config:
+            file: "/tmp/htcondor_metrics.log"
